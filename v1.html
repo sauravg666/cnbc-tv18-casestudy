@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CNBC TV18 — A markets-first app for a brand that was about to pivot</title>
+<meta name="description" content="UX redesign case study: turning the CNBC TV18 mobile app from a news reader into an investor-facing markets surface, in line with the brand's 2026 digital pivot." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f4f1e8;
+    --bg-alt: #ebe6d4;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a45;
+    --ink-mute: #8a8678;
+    --rule: #1a1a1a;
+    --accent: #c4451c;
+    --serif: 'Instrument Serif', 'Times New Roman', serif;
+    --sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --max: 1240px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: var(--accent); }
+
+  /* Nav */
+  .nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 18px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; background: var(--bg); z-index: 100;
+  }
+  .nav-brand { font-family: var(--mono); font-size: 13px; font-weight: 500; letter-spacing: 0.02em; }
+  .nav-brand::before { content: "●"; color: var(--accent); margin-right: 8px; }
+  .nav-links { display: flex; gap: 28px; font-family: var(--mono); font-size: 13px; align-items: center; }
+  .nav-links a { opacity: 0.7; transition: opacity 0.2s; display: inline-flex; align-items: center; line-height: 1; }
+  .nav-links a:hover { opacity: 1; color: var(--accent); }
+  .nav-cta { opacity: 1 !important; background: var(--ink); color: var(--bg) !important; padding: 8px 14px; letter-spacing: 0.05em; }
+  .nav-cta:hover { background: var(--accent); }
+
+  /* Hero */
+  .hero { padding: 100px 32px 80px; border-bottom: 1px solid var(--rule); overflow: hidden; }
+  .hero-inner {
+    max-width: var(--max); margin: 0 auto;
+    display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 64px; align-items: start;
+  }
+  .hero-right { position: relative; min-height: 560px; }
+  .meta-row {
+    display: flex; gap: 40px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    margin-bottom: 48px; padding-bottom: 16px; border-bottom: 1px dashed var(--ink-mute);
+  }
+  .meta-row span { display: inline-flex; flex-direction: column; gap: 4px; }
+  .meta-row strong { color: var(--ink); font-weight: 500; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--accent); margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(48px, 6.6vw, 96px);
+    line-height: 0.96; font-weight: 400; letter-spacing: -0.02em;
+    margin-bottom: 28px; max-width: 14ch;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-family: var(--serif); font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1.4; font-style: italic; color: var(--ink-soft);
+    max-width: 38ch; margin-bottom: 48px;
+  }
+
+  /* Buttons */
+  .cta-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 24px;
+    font-family: var(--mono); font-size: 13px; font-weight: 500;
+    letter-spacing: 0.02em; text-transform: uppercase;
+    border: 1px solid var(--rule); background: transparent; color: var(--ink);
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .btn:hover { background: var(--ink); color: var(--bg); }
+  .btn-primary { background: var(--ink); color: var(--bg); }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .btn .arr { transition: transform 0.15s; }
+  .btn:hover .arr { transform: translateX(3px); }
+
+  /* Hero collage */
+  .collage {
+    display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 60px;
+    gap: 12px; height: 100%;
+  }
+  .col-tile {
+    border: 1px solid var(--rule); padding: 14px 16px; background: var(--bg-alt);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
+    color: var(--ink); display: flex; flex-direction: column; justify-content: space-between;
+    overflow: hidden;
+  }
+  .col-tile.accent { background: var(--accent); color: var(--bg); }
+  .col-tile.dark { background: var(--ink); color: var(--bg); }
+  .col-tile.placeholder { background: var(--bg); border-style: dashed; color: var(--ink-mute); }
+  .col-tile .lbl { text-transform: uppercase; font-size: 10px; opacity: 0.6; }
+  .col-tile .val { font-family: var(--serif); font-size: 22px; font-style: italic; line-height: 1; }
+  .col-tile.tile-screen { aspect-ratio: 9 / 16; padding: 0; }
+  .col-tile.tile-screen .scr-frame {
+    height: 100%; display: flex; flex-direction: column;
+    background: var(--bg); border-bottom: 0;
+  }
+  .col-tile.tile-screen .scr-bar { padding: 12px 14px; border-bottom: 1px solid var(--rule); font-size: 10px; color: var(--ink-mute); }
+  .col-tile.tile-screen .scr-body { padding: 14px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .col-tile.tile-screen .scr-num { font-family: var(--serif); font-size: 36px; line-height: 1; font-style: italic; color: var(--accent); }
+  .col-tile.tile-screen .scr-cap { font-size: 10px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.08em; }
+  .t-A { grid-column: 1 / span 3; grid-row: 1 / span 7; }
+  .t-B { grid-column: 4 / span 3; grid-row: 1 / span 4; }
+  .t-C { grid-column: 4 / span 3; grid-row: 5 / span 3; }
+  .t-D { grid-column: 1 / span 3; grid-row: 8 / span 2; }
+  .t-E { grid-column: 4 / span 3; grid-row: 8 / span 2; }
+
+  /* Marquee */
+  .marquee {
+    border-bottom: 1px solid var(--rule); padding: 24px 0;
+    overflow: hidden; position: relative; background: var(--bg-alt);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+  }
+  .marquee-track {
+    display: inline-flex; gap: 48px; white-space: nowrap;
+    animation: scroll 50s linear infinite;
+    font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink);
+  }
+  .marquee-track span { display: inline-flex; align-items: center; gap: 48px; }
+  .marquee-track span::after { content: "●"; color: var(--accent); margin-left: 48px; }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Sections */
+  section { padding: 100px 32px; border-bottom: 1px solid var(--rule); }
+  .section-inner { max-width: var(--max); margin: 0 auto; }
+  .section-header {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 48px; margin-bottom: 80px; align-items: end;
+  }
+  .section-num {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-mute);
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .section-num::before {
+    content: ""; display: inline-block; width: 32px; height: 1px;
+    background: var(--ink); margin-right: 14px; vertical-align: middle;
+  }
+  h2 {
+    font-family: var(--serif); font-size: clamp(40px, 6vw, 72px);
+    font-weight: 400; line-height: 1; letter-spacing: -0.015em;
+    max-width: 18ch;
+  }
+  h2 em { font-style: italic; color: var(--accent); }
+  h3 { font-family: var(--serif); font-size: 32px; font-weight: 400; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 16px; }
+  h3 em { font-style: italic; color: var(--accent); }
+
+  /* Prose */
+  .prose { max-width: 64ch; }
+  .prose p + p { margin-top: 22px; }
+  .prose p { color: var(--ink); font-size: 17px; line-height: 1.75; }
+  .prose .lede { font-family: var(--serif); font-size: 28px; font-style: italic; color: var(--ink); line-height: 1.4; margin-bottom: 32px; }
+  .prose strong { font-weight: 600; color: var(--ink); }
+  .prose em { font-style: italic; color: var(--ink); }
+  .prose ul { padding-left: 0; list-style: none; margin: 22px 0; }
+  .prose ul li {
+    padding: 10px 0; border-bottom: 1px dashed var(--ink-mute);
+    display: grid; grid-template-columns: 24px 1fr; gap: 12px; align-items: baseline;
+  }
+  .prose ul li::before { content: "—"; color: var(--accent); font-family: var(--mono); }
+  .prose ul li strong { color: var(--ink); display: inline; }
+
+  .prose-grid {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 64px; align-items: start;
+  }
+  .prose-grid .side {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-mute);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    border-top: 1px solid var(--ink); padding-top: 16px;
+  }
+
+  /* Pull quote */
+  .pullquote {
+    margin: 72px auto; max-width: 50ch; text-align: left;
+    border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+    padding: 56px 0;
+  }
+  .pullquote blockquote {
+    font-family: var(--serif); font-size: clamp(28px, 3.6vw, 42px);
+    line-height: 1.25; font-style: italic; color: var(--ink);
+  }
+  .pullquote blockquote::before { content: "“"; color: var(--accent); font-size: 1.2em; line-height: 0; vertical-align: -0.15em; margin-right: 6px; }
+  .pullquote blockquote::after { content: "”"; color: var(--accent); font-size: 1.2em; line-height: 0; vertical-align: -0.15em; margin-left: 4px; }
+  .pullquote cite {
+    display: block; margin-top: 24px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink-mute);
+    text-transform: uppercase; letter-spacing: 0.1em; font-style: normal;
+  }
+  .pullquote cite::before { content: "— "; }
+
+  /* Tables */
+  .matrix {
+    width: 100%; border-collapse: collapse;
+    border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+    font-size: 14px; margin-top: 24px;
+  }
+  .matrix th, .matrix td {
+    text-align: left; vertical-align: top;
+    padding: 18px 16px; border-bottom: 1px solid var(--ink-mute);
+  }
+  .matrix th {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--ink); background: var(--bg-alt); border-bottom: 1px solid var(--ink); font-weight: 500;
+  }
+  .matrix td.competitor {
+    font-family: var(--serif); font-size: 22px; font-style: italic;
+    color: var(--ink); border-right: 1px solid var(--ink-mute); width: 18%;
+  }
+  .matrix td.opp { color: var(--accent); }
+  .matrix tr:last-child td { border-bottom: none; }
+
+  /* Themes list */
+  .themes {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;
+    border-top: 1px solid var(--ink); margin-top: 24px;
+  }
+  .theme {
+    border-bottom: 1px solid var(--ink-mute); border-right: 1px solid var(--ink-mute);
+    padding: 24px 20px;
+  }
+  .theme:nth-child(2n) { border-right: none; }
+  .theme .theme-num {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.1em; margin-bottom: 8px;
+  }
+  .theme .theme-text {
+    font-family: var(--serif); font-size: 22px; font-style: italic; line-height: 1.2; color: var(--ink);
+  }
+  .theme.strongest { background: var(--accent); color: var(--bg); }
+  .theme.strongest .theme-num,
+  .theme.strongest .theme-text { color: var(--bg); }
+  .theme.strongest .theme-text::after {
+    content: " ●"; font-style: normal; color: var(--bg);
+  }
+
+  /* Pillar block */
+  .pillar {
+    display: grid; grid-template-columns: 100px 1fr 1.4fr; gap: 48px;
+    padding: 56px 0; border-top: 1px solid var(--rule); align-items: start;
+  }
+  .pillar:last-child { border-bottom: 1px solid var(--rule); }
+  .pillar-num { font-family: var(--serif); font-size: 88px; font-style: italic; line-height: 0.85; color: var(--accent); }
+  .pillar-head h3 { font-size: 38px; line-height: 1; margin-bottom: 8px; }
+  .pillar-head .micro { font-family: var(--mono); font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.1em; }
+  .pillar-body { font-size: 16px; color: var(--ink-soft); line-height: 1.7; }
+  .pillar-body p + p { margin-top: 16px; }
+  .pillar-body .label {
+    font-family: var(--mono); font-size: 11px; color: var(--ink); text-transform: uppercase; letter-spacing: 0.12em;
+    display: block; margin-bottom: 6px; margin-top: 24px;
+  }
+  .pillar-body .killed {
+    border-left: 3px solid var(--accent); padding-left: 16px; margin-top: 24px;
+  }
+  .pillar-body .killed .label { color: var(--accent); margin-top: 0; }
+
+  /* Tabs visual (5 tabs) */
+  .tabs-visual {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+    margin-top: 32px;
+  }
+  .tab-cell {
+    border: 1px solid var(--ink); padding: 24px 16px;
+    background: var(--bg-alt); text-align: center;
+  }
+  .tab-cell.first { background: var(--accent); color: var(--bg); }
+  .tab-cell .tab-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; opacity: 0.6; }
+  .tab-cell .tab-name { font-family: var(--serif); font-size: 28px; font-style: italic; margin-top: 6px; line-height: 1; }
+  .tab-cell .tab-note { font-family: var(--mono); font-size: 10px; margin-top: 12px; letter-spacing: 0.05em; opacity: 0.7; }
+
+  /* Personas */
+  .personas {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border-top: 1px solid var(--ink); margin-top: 32px;
+  }
+  .persona {
+    border-bottom: 1px solid var(--ink); border-right: 1px solid var(--ink);
+    padding: 32px 24px;
+  }
+  .persona:last-child { border-right: none; }
+  .persona h4 { font-family: var(--serif); font-size: 26px; line-height: 1.1; font-weight: 400; margin-bottom: 12px; }
+  .persona p { font-size: 15px; color: var(--ink-soft); line-height: 1.6; }
+  .persona .pnum { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 8px; }
+
+  /* Article iteration grid */
+  .iterations {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 24px;
+  }
+  .iter {
+    display: flex; flex-direction: column;
+  }
+  .iter-screen {
+    border: 1px solid var(--ink); aspect-ratio: 9 / 16; background: var(--bg-alt);
+    padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+    margin-bottom: 16px; position: relative;
+  }
+  .iter-screen.r1 { background: var(--bg-alt); }
+  .iter-screen.r2 { background: var(--bg); border-style: dashed; }
+  .iter-screen.r3 { background: var(--ink); color: var(--bg); border-color: var(--accent); }
+  .iter-screen.r3 .iter-frame-label,
+  .iter-screen.r3 .iter-frame-cap { color: var(--bg); opacity: 0.7; }
+  .iter-frame-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--ink-mute); }
+  .iter-frame-num { font-family: var(--serif); font-size: 90px; font-style: italic; line-height: 1; color: var(--accent); }
+  .iter-frame-cap { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--ink-mute); text-transform: uppercase; }
+  .iter h4 { font-family: var(--serif); font-size: 22px; font-style: italic; margin-bottom: 6px; }
+  .iter p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
+  .iter .iter-tag {
+    font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-top: 12px;
+  }
+
+  /* Ship + Measurement layout */
+  .ship-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 32px; }
+  .ship-card { border: 1px solid var(--ink); padding: 32px; }
+  .ship-card.shipped { background: var(--accent); color: var(--bg); }
+  .ship-card.queued { background: var(--bg-alt); }
+  .ship-card .ship-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px; opacity: 0.8; }
+  .ship-card h3 { font-size: 32px; margin-bottom: 16px; }
+  .ship-card.shipped h3 em { color: var(--bg); }
+  .ship-card ul { list-style: none; padding: 0; margin-top: 24px; }
+  .ship-card ul li {
+    border-top: 1px dashed currentColor; padding: 14px 0;
+    display: grid; grid-template-columns: 1fr auto; gap: 16px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+  }
+  .ship-card ul li:last-child { border-bottom: 1px dashed currentColor; }
+  .ship-card ul li strong { font-family: var(--serif); font-size: 22px; font-style: italic; font-weight: 400; }
+
+  /* Reduction callout */
+  .reduction {
+    margin: 72px auto; max-width: 60ch; text-align: center;
+    border: 1px solid var(--ink); padding: 56px 32px;
+  }
+  .reduction .from-to {
+    font-family: var(--serif); font-style: italic; line-height: 1; margin-bottom: 16px;
+    font-size: clamp(56px, 9vw, 120px);
+  }
+  .reduction .from-to .from { color: var(--ink-mute); text-decoration: line-through; }
+  .reduction .from-to .arrow { color: var(--accent); margin: 0 16px; font-size: 0.6em; }
+  .reduction .from-to .to { color: var(--accent); }
+  .reduction .reduction-cap {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+
+  /* Measurement table */
+  .measure { margin-top: 32px; }
+  .measure-block { border-top: 1px solid var(--ink); padding-top: 16px; margin-top: 32px; }
+  .measure-block .ml {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+  }
+  .measure-block ul { list-style: none; padding: 0; }
+  .measure-block ul li {
+    padding: 14px 0; border-bottom: 1px dashed var(--ink-mute);
+    display: grid; grid-template-columns: 220px 1fr; gap: 24px;
+  }
+  .measure-block ul li strong { font-family: var(--serif); font-size: 18px; font-style: italic; font-weight: 400; }
+  .measure-block ul li span { font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
+
+  /* Reflection */
+  .reflection {
+    display: grid; grid-template-columns: 100px 1fr; gap: 48px;
+    padding: 56px 0; border-top: 1px solid var(--rule); align-items: start;
+  }
+  .reflection:last-child { border-bottom: 1px solid var(--rule); }
+  .reflection-num { font-family: var(--serif); font-size: 88px; font-style: italic; line-height: 0.85; color: var(--accent); }
+  .reflection-body h3 { font-size: 28px; margin-bottom: 16px; }
+  .reflection-body p { font-size: 17px; color: var(--ink-soft); line-height: 1.75; }
+  .reflection-body p + p { margin-top: 16px; }
+
+  /* Closing block */
+  .closing { background: var(--ink); color: var(--bg); padding: 140px 32px; text-align: left; }
+  .closing-inner { max-width: var(--max); margin: 0 auto; }
+  .closing .section-num { color: var(--ink-mute); }
+  .closing .section-num::before { background: var(--bg); }
+  .closing h2 { color: var(--bg); max-width: 22ch; margin-bottom: 32px; }
+  .closing h2 em { color: var(--accent); }
+  .closing p { font-family: var(--serif); font-style: italic; font-size: 24px; color: #d6d2c0; max-width: 56ch; line-height: 1.4; }
+  .closing p + p { margin-top: 22px; }
+  .closing .closing-meta {
+    margin-top: 64px; display: flex; gap: 48px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .closing .closing-meta span strong { color: var(--bg); display: block; margin-top: 4px; font-family: var(--serif); font-style: italic; font-size: 18px; letter-spacing: 0; text-transform: none; font-weight: 400; }
+
+  /* Placeholder banner */
+  .ph-banner {
+    border: 1px dashed var(--ink-mute); background: var(--bg-alt); padding: 18px 24px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.08em; text-transform: uppercase;
+    margin: 24px 0; display: flex; gap: 16px; align-items: center;
+  }
+  .ph-banner::before { content: "FIG."; color: var(--accent); font-weight: 500; }
+
+  /* Footer */
+  footer {
+    padding: 24px 32px; font-family: var(--mono); font-size: 11px; color: var(--ink-mute);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  }
+  footer a { color: var(--ink); }
+
+  /* Responsive */
+  @media (max-width: 1080px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .hero-right { min-height: 480px; max-width: 540px; }
+    .ship-grid { grid-template-columns: 1fr; gap: 24px; }
+    .iterations { grid-template-columns: 1fr; }
+    .personas { grid-template-columns: 1fr; }
+    .persona { border-right: none; }
+    .tabs-visual { grid-template-columns: repeat(2, 1fr); }
+    .prose-grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+  @media (max-width: 880px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+    .hero { padding: 80px 20px 60px; }
+    section { padding: 64px 20px; }
+    .section-header { grid-template-columns: 1fr; gap: 24px; margin-bottom: 48px; }
+    .pillar { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
+    .reflection { grid-template-columns: 1fr; gap: 16px; }
+    .meta-row { gap: 24px; }
+    .themes { grid-template-columns: 1fr; }
+    .theme { border-right: none; }
+    .matrix { font-size: 13px; }
+    .matrix td.competitor { font-size: 18px; }
+    .closing { padding: 80px 20px; }
+    .measure-block ul li { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">CNBC TV18 — Markets-first redesign</div>
+  <div class="nav-links">
+    <a href="#setup">Setup</a>
+    <a href="#research">Research</a>
+    <a href="#reframe">Reframe</a>
+    <a href="#pillars">Pillars</a>
+    <a href="#ship">Ship</a>
+    <a href="#reflection">Reflection</a>
+    <a href="https://medium.com/@sauravgupta878/case-study-cnbc-tv18-app-ux-redesign-2602e8dde51d" target="_blank" class="nav-cta">Read on Medium ↗</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="meta-row">
+        <span>Project<strong>CNBC TV18</strong></span>
+        <span>Role<strong>Lead UX — Research &amp; Design</strong></span>
+        <span>Year<strong>2024</strong></span>
+        <span>Status<strong>Nav shipped, rest queued</strong></span>
+      </div>
+      <div class="eyebrow">Case Study · UX Redesign</div>
+      <h1>A markets-first app for a brand about to <em>pivot.</em></h1>
+      <p class="hero-sub">The web app was a research terminal. The mobile app was a news reader. Investors used the first one — and CNBC's 2026 brand refresh meant the gap had to close.</p>
+      <div class="cta-row">
+        <a href="#setup" class="btn btn-primary">Start reading <span class="arr">→</span></a>
+        <a href="https://medium.com/@sauravgupta878/case-study-cnbc-tv18-app-ux-redesign-2602e8dde51d" target="_blank" class="btn">Original Medium piece ↗</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="collage">
+        <div class="col-tile tile-screen t-A">
+          <div class="scr-frame">
+            <div class="scr-bar">FIG. 01 / HOMEPAGE — REDESIGNED</div>
+            <div class="scr-body">
+              <div>
+                <div class="scr-cap">Markets-first surface</div>
+                <div class="scr-num">— I.</div>
+              </div>
+              <div class="scr-cap">Screen pending</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-tile accent t-B">
+          <div class="lbl">Strongest signal</div>
+          <div class="val">"Problem getting updated data"</div>
+          <div class="lbl">Repeated across 4 competitors</div>
+        </div>
+        <div class="col-tile dark t-C">
+          <div class="lbl">Bottom nav</div>
+          <div class="val">5 tabs<br/>shipped.</div>
+          <div class="lbl">Markets · News · Events · Watch · For you</div>
+        </div>
+        <div class="col-tile t-D">
+          <div class="lbl">Tap depth</div>
+          <div class="val">4 → 1</div>
+          <div class="lbl">For IPO &amp; stock content</div>
+        </div>
+        <div class="col-tile placeholder t-E">
+          <div class="lbl">FIG. 02</div>
+          <div class="val">Article<br/>iteration set.</div>
+          <div class="lbl">3 rounds — pending</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>MoneyControl</span><span>ET Money</span><span>Live Mint</span><span>Zee Business</span><span>ET Markets</span><span>Markets-first</span><span>News reader vs. investor</span><span>Inter for data</span><span>Noto Serif for prose</span><span>Five tabs</span><span>For you, not Portfolio</span><span>Active investor</span><span>Aspiring learner</span><span>Business enthusiast</span><span>Trader, cut</span><span>Killed alternatives</span><span>App stores as research</span><span>Real-time as default</span><span>10 cr unique visitors</span><span>Three iterations</span><span>Bottom nav shipped</span>
+    <span>MoneyControl</span><span>ET Money</span><span>Live Mint</span><span>Zee Business</span><span>ET Markets</span><span>Markets-first</span><span>News reader vs. investor</span><span>Inter for data</span><span>Noto Serif for prose</span><span>Five tabs</span><span>For you, not Portfolio</span><span>Active investor</span><span>Aspiring learner</span><span>Business enthusiast</span><span>Trader, cut</span><span>Killed alternatives</span><span>App stores as research</span><span>Real-time as default</span><span>10 cr unique visitors</span><span>Three iterations</span><span>Bottom nav shipped</span>
+  </div>
+</div>
+
+<!-- 01 — THE SETUP -->
+<section id="setup">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-num">01 — The setup</div>
+      <h2>The web app was the one investors <em>used.</em></h2>
+    </div>
+
+    <div class="prose-grid">
+      <div class="side">Context · Role · Constraints</div>
+      <div class="prose">
+        <p class="lede">CNBC TV18's web product worked. Sensex on top. Sector heat. IPO calendar. Stock pages two taps deep. The mobile app was a different product altogether — a feed of headlines, with a faint promise of market data buried somewhere in a hamburger menu.</p>
+
+        <p>That mismatch wasn't an accident. The web team had spent years building a research surface. The mobile team had built a news reader. Both teams owned different audiences in their heads.</p>
+
+        <p>In early 2026, CNBC announced a brand refresh. Digital-first. Markets-first. The mobile app was now expected to carry a positioning the team hadn't designed for. That was the brief.</p>
+
+        <p><strong>My role.</strong> I led research and design. The design director provided top-level oversight on direction. Two PMs scoped the build. Three engineers and two QA built and shipped what we cleared. The CPO weighed in at key milestones.</p>
+
+        <p>Bottom navigation went into development before I left the company. The rest of the redesign was queued behind it.</p>
+
+        <p><strong>What I had to work with.</strong> No primary research. No interviews, no usability tests. The budget and calendar didn't allow for it.</p>
+
+        <p>What I did have: app store reviews on the four largest competitor apps, public traffic data, competitor teardowns, and the brand refresh as a forcing function. I worked through that material for several weeks before drawing a line and starting the IA.</p>
+
+        <p>What came out of it was a reframe. That's the next section.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 — RESEARCH -->
+<section id="research">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-num">02 — Reading the competition</div>
+      <h2>The lab I built from <em>app stores.</em></h2>
+    </div>
+
+    <div class="prose-grid">
+      <div class="side">Method · Themes · Synthesis</div>
+      <div class="prose">
+        <p>I picked four apps to study: <strong>MoneyControl, ET Money, Live Mint, and Zee Business.</strong> Plus one secondary: ET Markets. These are the apps a CNBC TV18 user already has on their phone — same audience, different brands.</p>
+
+        <p>For each, I did three things:</p>
+
+        <ul>
+          <li><strong>Read the Play Store reviews.</strong> Hundreds of them. Tagged the themes that came up more than once.</li>
+          <li><strong>Wrote a strengths/weaknesses pass.</strong> What the app did better than CNBC. What it failed at.</li>
+          <li><strong>Drew a third column: opportunities for us.</strong> Not what to copy — what gaps the competitor's failure left us to take.</li>
+        </ul>
+
+        <p>Public traffic data sat alongside this. MoneyControl topped Indian financial sites at roughly <strong>10 crore unique visitors</strong> per article on its biggest pieces. That number wasn't a target. It was a calibration — this is the audience size at stake, and mobile is where most of them now live.</p>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      <blockquote>As we're not speaking with any users in person, these reviews will help us identify the problems in our application, and in the competitors apps — which later we can avoid repeating on our app designs.</blockquote>
+      <cite>From the research file, written at the time</cite>
+    </div>
+
+    <div class="prose-grid">
+      <div class="side">Themes · Across 4 competitors</div>
+      <div class="prose">
+        <p><strong>What the reviews said.</strong> The themes repeated. Same complaint, four different brand wrappers.</p>
+      </div>
+    </div>
+
+    <div class="themes">
+      <div class="theme"><div class="theme-num">01</div><div class="theme-text">Distracted by video ads</div></div>
+      <div class="theme"><div class="theme-num">02</div><div class="theme-text">Cluttered UI</div></div>
+      <div class="theme"><div class="theme-num">03</div><div class="theme-text">Annoyed by notifications</div></div>
+      <div class="theme"><div class="theme-num">04</div><div class="theme-text">Interrupted by ads &amp; popups while performing tasks</div></div>
+      <div class="theme strongest"><div class="theme-num">05 — Strongest signal</div><div class="theme-text">Problem getting updated data</div></div>
+      <div class="theme"><div class="theme-num">06</div><div class="theme-text">Loading issues</div></div>
+      <div class="theme"><div class="theme-num">07</div><div class="theme-text">Issues filtering content</div></div>
+      <div class="theme"><div class="theme-num">08 — Positive</div><div class="theme-text">"High quality content"</div></div>
+    </div>
+
+    <div class="prose-grid" style="margin-top: 64px;">
+      <div class="side">Reframe · Built from the data</div>
+      <div class="prose">
+        <p>Two things stood out.</p>
+
+        <p>First, the dominant negative <strong>wasn't a UI complaint</strong>. It was a <em>trust</em> complaint. <em>Problem getting updated data</em> — that's the most damaging thing an investor app can hear. If the price on screen might be five minutes old, you stop relying on the app for decisions. You open another one.</p>
+
+        <p>Second, every competitor had some version of this complaint. Which meant the bar to clear wasn't visual polish. It was making the app feel <em>now</em>. <strong>Real-time as the default state</strong>, not a flag the user had to verify.</p>
+
+        <p>That insight changed the brief.</p>
+      </div>
+    </div>
+
+    <div class="prose-grid" style="margin-top: 80px;">
+      <div class="side">Strengths · Weaknesses · Opportunities for us</div>
+      <div class="prose">
+        <p>The strengths-and-weaknesses pass mostly confirmed what the reviews said. Three observations stood out.</p>
+      </div>
+    </div>
+
+    <table class="matrix">
+      <thead>
+        <tr><th>Competitor</th><th>Strength</th><th>Weakness</th><th>Opportunity for us</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="competitor">MoneyControl</td>
+          <td>Comprehensive coverage. Real-time updates. Portfolio tools. Trusted brand.</td>
+          <td>Overcrowded UI. Intrusive ads. Slow loading. Confusing navigation.</td>
+          <td class="opp">Cleaner surface, fewer compromises to advertisers.</td>
+        </tr>
+        <tr>
+          <td class="competitor">ET Money</td>
+          <td>Strong ET content integration. Clean UI. Watchlist. Advanced charting. Non-intrusive ads.</td>
+          <td>Clunky navigation. Text-heavy for the under-35 audience.</td>
+          <td class="opp">Visual + interactive layer over the same data depth.</td>
+        </tr>
+        <tr>
+          <td class="competitor">Live Mint</td>
+          <td>Strong editorial voice. Clean UI. Font scaling. Well-placed ads.</td>
+          <td>Limited interactivity. Weak on real-time.</td>
+          <td class="opp">Pair CNBC's broadcast presence with live data — we were the only player with both.</td>
+        </tr>
+        <tr>
+          <td class="competitor">Zee Business</td>
+          <td>Comprehensive financial news.</td>
+          <td>No customisable portfolios. No live tracking.</td>
+          <td class="opp">Integrate advanced research tools.</td>
+        </tr>
+        <tr>
+          <td class="competitor">Business Times</td>
+          <td>Hindi articles. Regional reach.</td>
+          <td>News-only. No live market data.</td>
+          <td class="opp">Vernacular financial tools.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="prose-grid" style="margin-top: 64px;">
+      <div class="side">The honest constraint</div>
+      <div class="prose">
+        <p>I didn't talk to a single user during this work. I read what they wrote on app store pages — which is a particular kind of evidence. It's biased toward extremes (people review when they're angry or evangelical), biased toward people who write reviews (a small fraction of users), and captures a moment rather than a relationship.</p>
+
+        <p>But the patterns repeated. Across four apps, dozens of reviews, weeks of reading. <strong>When the same complaint shows up across competitors that don't share product teams, that's not bias. That's a category problem.</strong> And category problems are the ones a redesign can actually solve.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 — THE REFRAME -->
+<section id="reframe">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-num">03 — The reframe</div>
+      <h2>News readers scan for novelty. Investors scan for <em>deviation.</em></h2>
+    </div>
+
+    <div class="prose-grid">
+      <div class="side">Mental model · Then IA</div>
+      <div class="prose">
+        <p>A news reader scans for novelty. <em>What's new since the last time I checked.</em></p>
+
+        <p>An investor scans for deviation. <em>What's moved away from where I expected it to be.</em></p>
+
+        <p>The same content can serve both — same article, same chart, same sector heatmap — but only if the layout serves both. The existing CNBC mobile app had been built around scanning for novelty. Top story. Latest news. More stories below. Personalisation as an afterthought.</p>
+
+        <p>That's a fine layout for a news app. <strong>It's the wrong layout for an investor.</strong></p>
+
+        <p>The old IA put News on the home tab. Markets was a section you navigated to. The redesign inverts that: <em>Markets becomes the surface the app opens on.</em> News becomes the section you navigate to.</p>
+
+        <p>This sounds like a small move. It isn't. It changes who the app is for by default. A news-first app politely makes room for investor tools. A markets-first app politely makes room for news. The polite-room-making is what determines how the app feels in the first three seconds — and the first three seconds are what the user remembers.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 80px;">
+      <div class="prose-grid">
+        <div class="side">Bottom navigation · 5 tabs</div>
+        <div class="prose">
+          <p>After several iterations, the bottom navigation settled on:</p>
+        </div>
+      </div>
+      <div class="tabs-visual">
+        <div class="tab-cell first">
+          <div class="tab-num">01 — HOME</div>
+          <div class="tab-name">Market</div>
+          <div class="tab-note">Indices · Sectors · Stocks</div>
+        </div>
+        <div class="tab-cell">
+          <div class="tab-num">02</div>
+          <div class="tab-name">News</div>
+          <div class="tab-note">Articles · Videos</div>
+        </div>
+        <div class="tab-cell">
+          <div class="tab-num">03</div>
+          <div class="tab-name">Events</div>
+          <div class="tab-note">Summits · Awards · Tickets</div>
+        </div>
+        <div class="tab-cell">
+          <div class="tab-num">04</div>
+          <div class="tab-name">Watch</div>
+          <div class="tab-note">Live TV · On-demand</div>
+        </div>
+        <div class="tab-cell">
+          <div class="tab-num">05</div>
+          <div class="tab-name">For you</div>
+          <div class="tab-note">Watchlist · Saved · Curated</div>
+        </div>
+      </div>
+
+      <div class="prose-grid" style="margin-top: 56px;">
+        <div class="side">Two decisions worth slowing down on</div>
+        <div class="prose">
+          <p><strong>"Events" as a top-level tab.</strong> CNBC's premium events business — summits, awards, industry conferences — was the brand's most underused commercial asset on mobile. It deserved a tab, not a section inside News. Made discoverable, ticket attach could become a real lever rather than a rounding error.</p>
+
+          <p><strong>"For you" instead of "Portfolio."</strong> Most apps in this category use "Portfolio" or "My Stocks". We considered both. The problem with "Portfolio" is that it implies the user has already done the setup work. For the aspiring-investor segment we explicitly wanted to court — newer to markets, not yet tracking real positions — "Portfolio" reads as <em>for someone else</em>.</p>
+
+          <p>"For you" is a shallower commitment. It can hold a watchlist if the user has built one. It can hold sector summaries and curated stories if they haven't. It grows with the user instead of asking them to be ahead of where they are.</p>
+
+          <p>The naming is also a trojan horse. "For you" lets us put market signals in front of users who'd never explicitly asked for them, without it feeling like the app is pushing data at them. <em>It's their tab.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="prose-grid" style="margin-top: 80px;">
+      <div class="side">Three personas</div>
+      <div class="prose">
+        <p>The redesign was scoped for three. We had drafted a fourth — the dedicated trader — and cut it.</p>
+      </div>
+    </div>
+
+    <div class="personas">
+      <div class="persona">
+        <div class="pnum">PERSONA 01</div>
+        <h4>Active retail investor</h4>
+        <p>Already trades. Wants fast, accurate, current. Comes for the data first, the analysis second.</p>
+      </div>
+      <div class="persona">
+        <div class="pnum">PERSONA 02</div>
+        <h4>Aspiring investor &amp; learner</h4>
+        <p>New or casual. Wants the path to feel obvious and the data to feel safe. Will leave if intimidated.</p>
+      </div>
+      <div class="persona">
+        <div class="pnum">PERSONA 03</div>
+        <h4>Business enthusiast</h4>
+        <p>Doesn't trade much. Wants to feel informed. Reads more, taps less.</p>
+      </div>
+    </div>
+
+    <div class="prose-grid" style="margin-top: 56px;">
+      <div class="side">The persona we cut</div>
+      <div class="prose">
+        <p>The dedicated trader's tooling needs (advanced charts, options chains, technical indicators) would have demanded a different product. Trying to serve them inside this app would have either bloated the experience for the other three, or under-served the trader badly. Both bad outcomes.</p>
+
+        <p>We left the trader to the broker apps and committed to the three. <strong>You either pick who you're for, or you let everyone in and please nobody.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 — FOUR PILLARS -->
+<section id="pillars">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-num">04 — Four pillars</div>
+      <h2>Each principle had a decision and an alternative we <em>killed.</em></h2>
+    </div>
+
+    <div class="prose-grid" style="margin-bottom: 32px;">
+      <div class="side">Anchored in research · Decisions logged</div>
+      <div class="prose">
+        <p>The trend analysis came out as four design principles. Each was anchored in something the research had surfaced. Each had a decision attached, and each had something we considered and didn't do.</p>
+      </div>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <div class="pillar-head">
+        <h3>Navigation</h3>
+        <div class="micro">Discoverability · Hierarchy</div>
+      </div>
+      <div class="pillar-body">
+        <p>Buried features were the consistent theme across reviews of the old CNBC app. IPO data, events, the live TV stream — all sat behind hamburger menus or deep section pages. MoneyControl's same complaint was its biggest weakness in the strengths/weaknesses pass.</p>
+
+        <span class="label">Decision</span>
+        <p>Bottom navigation with five tabs. L1 sub-navigation within each tab. The hamburger reduced to settings, account, and help — secondary surfaces only.</p>
+
+        <div class="killed">
+          <span class="label">Considered and killed</span>
+          <p>A four-tab bar with a docked "+" in the middle for primary actions (alerts, search). Killed because the audience was already complaining about hidden features. A modal action sheet behind a generic "+" would be one more hidden mode, not one fewer.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-num">02</div>
+      <div class="pillar-head">
+        <h3>Readability</h3>
+        <div class="micro">Typography · Numeric scanning</div>
+      </div>
+      <div class="pillar-body">
+        <p>The old app used Montserrat across the board. Geometric, modern, brand-consistent. And wrong for the product. Montserrat's narrow numerals and tight numeric line-height make stock prices, percentages, and indices harder to scan than they need to be at the small sizes the app uses.</p>
+
+        <span class="label">Decision</span>
+        <p><strong>Inter</strong> for UI and numeric data — built for screens, with a tall x-height that holds up at 12–14pt. <strong>Noto Serif</strong> for long-form articles, where the eye benefits from a proper reading face.</p>
+
+        <div class="killed">
+          <span class="label">Considered and killed</span>
+          <p>Keeping Montserrat for headlines and using Inter only for data. Killed because the brand should serve the product, not the other way around. Mixed-typeface stacks read inconsistent, and the app's primary content is numbers more often than headlines.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-num">03</div>
+      <div class="pillar-head">
+        <h3>Personalisation</h3>
+        <div class="micro">Default state · Memory</div>
+      </div>
+      <div class="pillar-body">
+        <p>The reviews of competitor apps that <em>worked</em> shared one feature: the user's content was waiting for them when they opened the app. ET Money's watchlist. Live Mint's saved sectors. The CNBC app had none of this.</p>
+
+        <span class="label">Decision</span>
+        <p>Watchlist as the default state on the "For you" tab. Stock alerts. Sector preferences inferred from articles read. The app remembers between sessions — the user doesn't reconfigure on every launch.</p>
+
+        <div class="killed">
+          <span class="label">Considered and killed</span>
+          <p>A persistent watchlist strip across the top of the home (Markets) tab. Killed because the home tab needs to communicate the <em>state of the market first</em> — what an investor is looking at the moment they open. The user's personal positions are second-order. That's what "For you" is for.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-num">04</div>
+      <div class="pillar-head">
+        <h3>Accessibility</h3>
+        <div class="micro">Dark mode · Font scaling</div>
+      </div>
+      <div class="pillar-body">
+        <p>CNBC TV18 had a font-scaling toggle in settings. It was technically present, functionally broken — most screens didn't respect it. The app shipped without dark mode at all, which is a meaningful gap for an audience that opens the app early-morning and late-evening, often in low light.</p>
+
+        <span class="label">Decision</span>
+        <p>Dark mode as a real surface — not a tinted overlay, a properly tokenised parallel theme. Font scaling tied to system settings, respected on every screen.</p>
+
+        <div class="killed">
+          <span class="label">Considered and killed</span>
+          <p>Building our own font-scale slider inside the app, separate from the OS-level setting. Killed because users who need accessibility have already configured it at the system level. Asking them to set it again, inside one app, fragments the experience.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 — ITERATION & SHIP -->
+<section id="ship">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-num">05 — Iteration and ship</div>
+      <h2>Three rounds. The third is the one that <em>shipped.</em></h2>
+    </div>
+
+    <div class="prose-grid">
+      <div class="side">Article page · 3 iterations in the file</div>
+      <div class="prose">
+        <p>The article-consumption page went through three rounds. The file still has all three.</p>
+      </div>
+    </div>
+
+    <div class="iterations">
+      <div class="iter">
+        <div class="iter-screen r1">
+          <div class="iter-frame-label">FIG. 03 / ROUND 01</div>
+          <div class="iter-frame-num">— I.</div>
+          <div class="iter-frame-cap">Article v1 — to insert</div>
+        </div>
+        <h4>Round 01 — Typography only</h4>
+        <p>Kept the existing layout pattern — headline, hero, body, related — and tried to fix the readability problems with typography alone. It looked better. It wasn't materially different to use.</p>
+        <span class="iter-tag">Under-changed</span>
+      </div>
+      <div class="iter">
+        <div class="iter-screen r2">
+          <div class="iter-frame-label">FIG. 04 / ROUND 02</div>
+          <div class="iter-frame-num">— II.</div>
+          <div class="iter-frame-cap">Article v2 — to insert</div>
+        </div>
+        <h4>Round 02 — Inline market context</h4>
+        <p>Introduced a small ticker for the stock or sector the article was about, anchored above the body. The intent was right. The execution made the page feel cluttered. Two information layers competed for the same screen real estate.</p>
+        <span class="iter-tag">Over-changed</span>
+      </div>
+      <div class="iter">
+        <div class="iter-screen r3">
+          <div class="iter-frame-label">FIG. 05 / ROUND 03</div>
+          <div class="iter-frame-num">— III.</div>
+          <div class="iter-frame-cap">Article v3 — shipped to spec</div>
+        </div>
+        <h4>Round 03 — Sticky &amp; collapsible</h4>
+        <p>Moved the market context into a sticky module that collapsed on scroll, so the reader could focus on the article and pull the data back when they wanted it. This is the version that went into the spec.</p>
+        <span class="iter-tag">Right proportion</span>
+      </div>
+    </div>
+
+    <div class="prose-grid" style="margin-top: 64px;">
+      <div class="side">The lesson, looking back</div>
+      <div class="prose">
+        <p>The first round under-changed, the second over-changed, and the third found the proportion. That's a normal arc.</p>
+
+        <p>What was useful was that I'd kept the file for all three — when the team asked "why this and not that?", I had the receipts.</p>
+      </div>
+    </div>
+
+    <!-- WHAT SHIPPED -->
+    <div style="margin-top: 96px;">
+      <div class="prose-grid">
+        <div class="side">What shipped · What queued</div>
+        <div class="prose">
+          <p>Bottom navigation went into development before I left the company. The structural change is verifiable from the IA alone.</p>
+        </div>
+      </div>
+
+      <div class="ship-grid">
+        <div class="ship-card shipped">
+          <div class="ship-eyebrow">★ Shipped — into development</div>
+          <h3>Bottom navigation. <em>Real-time as default.</em></h3>
+          <ul>
+            <li><span>Five-tab bottom nav</span><strong>Live</strong></li>
+            <li><span>L1 sub-nav per tab</span><strong>Live</strong></li>
+            <li><span>Hamburger reduced to settings/help</span><strong>Live</strong></li>
+            <li><span>Events as a top-level tab</span><strong>Live</strong></li>
+          </ul>
+        </div>
+        <div class="ship-card queued">
+          <div class="ship-eyebrow">Queued — pending build</div>
+          <h3>Everything else. <em>Spec-ready.</em></h3>
+          <ul>
+            <li><span>Typography rollout (Inter + Noto Serif)</span><strong>Spec</strong></li>
+            <li><span>Dark mode, font scaling</span><strong>Spec</strong></li>
+            <li><span>"For you" + watchlist as default</span><strong>Spec</strong></li>
+            <li><span>Article page round 03</span><strong>Spec</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAP DEPTH -->
+    <div class="reduction">
+      <div class="from-to">
+        <span class="from">4 taps</span><span class="arrow">→</span><span class="to">1 tap</span>
+      </div>
+      <div class="reduction-cap">Structural reduction in tap depth for IPO &amp; stock content</div>
+    </div>
+
+    <div class="prose-grid">
+      <div class="side">Honest framing on the number</div>
+      <div class="prose">
+        <p>This is a claim about the IA, not about user behaviour. The reduction is verifiable from the design itself — counting screens between app open and a stock detail page, before and after.</p>
+
+        <p>If users behave on the new IA the way they do on comparable apps after similar reductions, the engagement lift on those flows lands in the <strong>30–40%</strong> range. Whether they do is the open question. Post-launch metrics weren't accessible to me after I left, so I'm not making a behavioural claim here.</p>
+      </div>
+    </div>
+
+    <!-- MEASUREMENT PLAN -->
+    <div class="measure" style="margin-top: 80px;">
+      <div class="prose-grid">
+        <div class="side">What I'd measure · In place of metrics I can't claim</div>
+        <div class="prose">
+          <p>A measurement plan reads as more senior than fabricated metrics. Here's what I'd instrument if I were running validation tomorrow.</p>
+        </div>
+      </div>
+
+      <div class="measure-block">
+        <div class="ml">Leading indicators — within a week</div>
+        <ul>
+          <li><strong>Time-to-first-quote</strong><span>Seconds from app open to a stock detail page. Direct test of the "Markets first" thesis.</span></li>
+          <li><strong>Watchlist creation rate</strong><span>Share of new sessions that add at least one stock in the first three uses. Proxy for the personalisation thesis.</span></li>
+          <li><strong>Events tab tap-through</strong><span>Share of sessions that touch the Events tab. Tests whether premium events have become discoverable.</span></li>
+        </ul>
+      </div>
+
+      <div class="measure-block">
+        <div class="ml">Lagging indicators — over a quarter</div>
+        <ul>
+          <li><strong>D7 / D30 retention by persona segment</strong><span>Most important and most expensive to instrument. Tells us if the right people are coming back.</span></li>
+          <li><strong>Event ticket attach rate</strong><span>The commercial test. Did surfacing Events as a tab move tickets?</span></li>
+          <li><strong>Session count during market hours vs. after-hours</strong><span>Tells us whether the app has become an investor surface or stayed a news reader.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 — REFLECTION -->
+<section id="reflection">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-num">06 — What I'd do differently</div>
+      <h2>The questions I never got to <em>answer.</em></h2>
+    </div>
+
+    <div class="reflection">
+      <div class="reflection-num">01</div>
+      <div class="reflection-body">
+        <h3>I'd run user interviews — not as a luxury, as a structural check.</h3>
+        <p>The reframe (Markets first instead of News first) is sound for active investors. I never got to test whether it landed for the aspiring-investor segment. That segment might feel intimidated by a Markets-first home.</p>
+        <p>Eight to ten thirty-minute conversations would have answered that. I didn't have the budget at the time. The case for the budget would be sharper now: a redesign that got the active investor right and lost the aspirer would have been a strategic miss, not a design success.</p>
+      </div>
+    </div>
+
+    <div class="reflection">
+      <div class="reflection-num">02</div>
+      <div class="reflection-body">
+        <h3>I'd think harder about the trader segment before cutting them.</h3>
+        <p>Cutting the dedicated trader was right for this version. But ceding the highest-LTV user to broker apps is also a long-term commercial concession.</p>
+        <p>There's a product question CNBC TV18 will eventually face — does it grow into a tradeable product, or stay forever on the consumption side? That decision was above my pay grade. It's still the one that determines whether "For you" grows up into something that monetises seriously, or remains an editorial surface.</p>
+      </div>
+    </div>
+
+    <div class="reflection">
+      <div class="reflection-num">03</div>
+      <div class="reflection-body">
+        <h3>I'd seriously question whether Markets and News should even be separate tabs.</h3>
+        <p>If I were rebuilding this from scratch with no legacy taxonomy, I'd consider collapsing them. An investor experiencing a market move <em>during</em> the move doesn't separate "the price changed" from "why it changed."</p>
+        <p>The redesign honoured the existing news/markets split because that's how the editorial team is organised. A bolder version would treat them as one surface and let context do the rest. That's the version I didn't get to make.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="closing-inner">
+    <div class="section-num">— Closing</div>
+    <h2 style="margin-top: 24px;">A real attempt at a real <em>strategic mismatch.</em></h2>
+    <p>The CNBC TV18 mobile redesign used the evidence available, drew lines where lines were honest, and shipped what could be shipped on the timeline that existed.</p>
+    <p>The bottom navigation that did ship is the part I'm most willing to let stand alone — it changed the structural answer to a question that was costing the brand investor attention every day the old app was open. The rest is a plan, not an outcome.</p>
+    <p>That's the version of the work that's true.</p>
+
+    <div class="closing-meta">
+      <span>Project<strong>CNBC TV18 — Mobile redesign</strong></span>
+      <span>Year<strong>2024</strong></span>
+      <span>Role<strong>Lead UX, Research &amp; Design</strong></span>
+      <span>Status<strong>Bottom nav shipped, rest queued</strong></span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><span>Saurav Keshari</span> · <span>UX Case Study</span> · <span>2026</span></div>
+  <div>Original write-up · <a href="https://medium.com/@sauravgupta878/case-study-cnbc-tv18-app-ux-redesign-2602e8dde51d" target="_blank">Read on Medium ↗</a></div>
+</footer>
+
+</body>
+</html>
