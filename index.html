@@ -731,6 +731,115 @@
   }
   footer a { color: var(--ink); }
 
+  /* ────────────── SCREEN GALLERY (slider) ────────────── */
+  .gallery-track-wrap {
+    width: 100vw;
+    position: relative;
+    left: 50%; right: 50%;
+    margin-left: -50vw; margin-right: -50vw;
+    margin-top: 64px;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 64px 0;
+    background: var(--paper);
+  }
+  .gallery-track {
+    display: flex;
+    gap: 32px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    padding: 0 40px 24px;
+    cursor: grab;
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink-mute) var(--bg-warm);
+  }
+  .gallery-track:active { cursor: grabbing; }
+  .gallery-track::-webkit-scrollbar { height: 4px; }
+  .gallery-track::-webkit-scrollbar-track { background: var(--bg-warm); }
+  .gallery-track::-webkit-scrollbar-thumb { background: var(--ink-mute); }
+  .gallery-track::-webkit-scrollbar-thumb:hover { background: var(--ink); }
+
+  .gallery-card {
+    flex: 0 0 auto;
+    width: 360px;
+    scroll-snap-align: center;
+    user-select: none;
+  }
+  .gallery-card:first-child { margin-left: max(0px, calc(50vw - 220px)); }
+  .gallery-card:last-child { margin-right: max(40px, calc(50vw - 220px)); }
+
+  .gallery-screen {
+    width: 360px;
+    height: 800px;
+    border: 1px solid var(--ink);
+    background: var(--bg-warm);
+    display: flex; flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .gallery-screen .gs-bar {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--hairline);
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.1em; color: var(--ink-mute);
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .gallery-screen .gs-bar b { color: var(--accent); }
+  .gallery-screen .gs-body {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .gallery-screen .gs-num {
+    font-family: var(--serif); font-size: 160px;
+    font-style: italic; line-height: 0.85;
+    color: var(--accent); letter-spacing: -0.04em;
+  }
+  .gallery-screen .gs-cap {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.12em; color: var(--ink-mute);
+    text-transform: uppercase; margin-top: 20px; text-align: center;
+  }
+  .gallery-screen.shipped {
+    background: var(--ink); border-color: var(--accent); border-width: 2px;
+  }
+  .gallery-screen.shipped .gs-bar { color: #c8c4b8; border-color: #333; }
+  .gallery-screen.shipped .gs-bar b { color: #d2c5a9; }
+  .gallery-screen.shipped .gs-num { color: var(--paper); }
+  .gallery-screen.shipped .gs-cap { color: #c8c4b8; }
+  .gallery-screen.dashed {
+    background: var(--bg); border-style: dashed;
+  }
+
+  .gallery-meta {
+    margin-top: 20px;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute);
+  }
+  .gallery-meta strong {
+    display: block; margin-top: 6px; color: var(--ink);
+    font-family: var(--serif); font-size: 22px; font-weight: 400; font-style: italic;
+    text-transform: none; letter-spacing: -0.01em;
+  }
+  .gallery-meta .tab-link {
+    display: inline-block; margin-top: 6px;
+    color: var(--ink-mute); border-bottom: 1px dotted var(--ink-mute);
+  }
+
+  .gallery-hint {
+    max-width: var(--max); margin: 32px auto 0;
+    padding: 0 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .gallery-hint .gh-left::before { content: "← "; color: var(--accent); }
+  .gallery-hint .gh-left::after { content: " →"; color: var(--accent); }
+  .gallery-hint b { color: var(--accent); font-weight: 500; }
+
   /* Responsive small */
   @media (max-width: 700px) {
     .nav { padding: 16px 20px; }
@@ -741,6 +850,11 @@
     .reduction-bleed { padding: 80px 20px; }
     .reframe-side, .pillar-mag, .ship-block { padding: 32px 24px; }
     .iter-screen-num { font-size: 80px; }
+    .gallery-screen { width: 300px; height: 666px; }
+    .gallery-card { width: 300px; }
+    .gallery-screen .gs-num { font-size: 120px; }
+    .gallery-track { padding: 0 20px 16px; gap: 16px; }
+    .gallery-hint { flex-direction: column; gap: 8px; padding: 0 20px; align-items: flex-start; }
   }
 </style>
 </head>
@@ -1119,10 +1233,143 @@
   </div>
 </section>
 
-<!-- ────────────── 05 — ITERATION ────────────── -->
+<!-- ────────────── 05 — SCREEN GALLERY ────────────── -->
+<section id="screens">
+  <div class="sec-inner">
+    <div class="sec-num"><b>05</b> The Screens</div>
+    <h2 class="sec-title">Ten screens. One <em>system.</em></h2>
+
+    <div class="reading">
+      <p>The redesign covered the full app surface — from splash to stock detail, Live TV to Events, watchlist to article. Each screen carried the same IA, the same typography, the same default-state logic.</p>
+
+      <p>Below is the working set, at the production canvas size: <strong>360 × 800</strong>. Drag to scroll. The shipped variant is marked.</p>
+    </div>
+  </div>
+
+  <div class="gallery-track-wrap">
+    <div class="gallery-track" id="galleryTrack">
+      <div class="gallery-card">
+        <div class="gallery-screen">
+          <div class="gs-bar"><span><b>FIG. 06</b> · 01 of 10</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— I.</div>
+            <div class="gs-cap">Splash</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 01<strong>Splash &amp; launch</strong><span class="tab-link">App boot</span></div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-screen">
+          <div class="gs-bar"><span><b>FIG. 07</b> · 02 of 10</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— II.</div>
+            <div class="gs-cap">Markets — home</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 02<strong>Home — Markets</strong><span class="tab-link">Tab 01 / default</span></div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-screen">
+          <div class="gs-bar"><span><b>FIG. 08</b> · 03 of 10</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— III.</div>
+            <div class="gs-cap">NSE / BSE indices</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 03<strong>Indices detail</strong><span class="tab-link">Markets / L1</span></div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-screen">
+          <div class="gs-bar"><span><b>FIG. 09</b> · 04 of 10</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— IV.</div>
+            <div class="gs-cap">Stock detail</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 04<strong>Stock detail page</strong><span class="tab-link">Markets / L2</span></div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-screen shipped">
+          <div class="gs-bar"><span><b>FIG. 10</b> · 05 of 10 — SHIPPED</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— V.</div>
+            <div class="gs-cap">Article — Round 03</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 05<strong>Article (R03 — to spec)</strong><span class="tab-link">News / L2 · sticky context module</span></div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-screen">
+          <div class="gs-bar"><span><b>FIG. 11</b> · 06 of 10</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— VI.</div>
+            <div class="gs-cap">News — list</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 06<strong>News listing</strong><span class="tab-link">Tab 02</span></div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-screen">
+          <div class="gs-bar"><span><b>FIG. 12</b> · 07 of 10</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— VII.</div>
+            <div class="gs-cap">Events — listings</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 07<strong>Events &amp; ticketing</strong><span class="tab-link">Tab 03 / new top-level</span></div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-screen">
+          <div class="gs-bar"><span><b>FIG. 13</b> · 08 of 10</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— VIII.</div>
+            <div class="gs-cap">Live TV / on-demand</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 08<strong>Watch — Live TV</strong><span class="tab-link">Tab 04</span></div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-screen">
+          <div class="gs-bar"><span><b>FIG. 14</b> · 09 of 10</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— IX.</div>
+            <div class="gs-cap">For you — watchlist</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 09<strong>For you (watchlist)</strong><span class="tab-link">Tab 05 / personalised</span></div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-screen dashed">
+          <div class="gs-bar"><span><b>FIG. 15</b> · 10 of 10</span><span>360 × 800</span></div>
+          <div class="gs-body">
+            <div class="gs-num">— X.</div>
+            <div class="gs-cap">Bottom nav — close-up</div>
+          </div>
+        </div>
+        <div class="gallery-meta">Screen 10<strong>Bottom navigation</strong><span class="tab-link">Component close-up</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-hint">
+    <span class="gh-left">Drag horizontally to explore</span>
+    <span>10 screens · <b>1 shipped variant</b></span>
+  </div>
+</section>
+
+<!-- ────────────── 06 — ITERATION ────────────── -->
 <section id="ship">
   <div class="sec-inner">
-    <div class="sec-num"><b>05</b> Iteration &amp; Ship</div>
+    <div class="sec-num"><b>06</b> Iteration &amp; Ship</div>
     <h2 class="sec-title">Three rounds. The third is the one that <em>shipped.</em></h2>
 
     <div class="reading">
@@ -1271,7 +1518,7 @@
 <!-- ────────────── 06 — REFLECTION ────────────── -->
 <section id="reflection">
   <div class="sec-inner">
-    <div class="sec-num"><b>06</b> What I'd Do Differently</div>
+    <div class="sec-num"><b>07</b> What I'd Do Differently</div>
     <h2 class="sec-title">The questions I never got to <em>answer.</em></h2>
 
     <div class="reflections">
@@ -1327,6 +1574,43 @@
   <div>Saurav Keshari · UX Case Study · 2026</div>
   <div>Original write-up · <a href="https://medium.com/@sauravgupta878/case-study-cnbc-tv18-app-ux-redesign-2602e8dde51d" target="_blank">Read on Medium ↗</a></div>
 </footer>
+
+<script>
+  // Click-and-drag horizontal scroll for the screen gallery
+  (function() {
+    const track = document.getElementById('galleryTrack');
+    if (!track) return;
+    let isDown = false, startX = 0, startScroll = 0, moved = 0;
+
+    track.addEventListener('mousedown', (e) => {
+      isDown = true; moved = 0;
+      startX = e.pageX;
+      startScroll = track.scrollLeft;
+      track.style.scrollSnapType = 'none';
+      track.style.cursor = 'grabbing';
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDown) return;
+      isDown = false;
+      track.style.cursor = '';
+      // Re-enable snap after drag
+      setTimeout(() => { track.style.scrollSnapType = 'x mandatory'; }, 60);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      const dx = e.pageX - startX;
+      moved = Math.abs(dx);
+      track.scrollLeft = startScroll - dx;
+    });
+
+    // Prevent click-throughs after a drag
+    track.addEventListener('click', (e) => {
+      if (moved > 6) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+  })();
+</script>
 
 </body>
 </html>
